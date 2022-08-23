@@ -9,3 +9,22 @@ form{
 h3{
     margin-top: 30%;
 }
+
+#notificar-success{
+    margin-top: 1%;
+    margin-left: 80%;
+    width: 300px;
+}
+#notificar-error{
+    margin-top: 1%;
+    margin-left: 80%;
+    width: 300px;
+}
+
+#exito{
+    width: 200px;
+}
+
+#error{
+    width: 200px;
+}

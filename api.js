@@ -8,7 +8,10 @@ app.use(express.json());
 app.use(express.static('resources'));
 app.use(express.static('app'));
 
-app.post('/canjeo',controller.canjear)
+app.post('/canjeo',controller.canjear,(req,res)=>{
+    res.status(200).send("Exito")
+    console.log("exitooo")
+})
 
 app.get('/user',(req,res)=>{
     res.send('hola mundo')

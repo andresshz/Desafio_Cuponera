@@ -14,8 +14,14 @@ const validarDui = (dui) =>{
      }
 }
 
-const initTemplate = ()=>{
+const initTemplate = () =>{
 const template = `
+<div id="notificar-success" class="alert alert-success" role="alert">
+
+</div>
+<div id="notificar-error" class="alert alert-danger" role="alert">
+
+</div>
 <form id="formulario">
 <h3>Canjear cupon</h3>
 <div class="input-field col s6">
@@ -28,6 +34,8 @@ const template = `
 </div>
 <button class="btn waves-effect waves-light" type="submit" name="action">Canjear Cupon</button>
 </form>
+
+
 `;
 
 const body = document.getElementsByTagName('body')[0]
@@ -46,11 +54,31 @@ if(validarCodigo(codigo_cupon) == true && validarDui(dui) == true){
     const data = new FormData(form)
     const dataForm = Object.fromEntries(data.entries())
     console.log(dataForm)
+
+    const request = await fetch('/canjeo', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataForm)
+    })
+    
+    const respuesta = await request.text()
+    if(respuesta === "Exito"){
+        const notificar = document.getElementById('notificar-success')
+        notificar.innerHTML = "Cupon canjeado correctamente!!!!"
+        form.reset()
+    }else if(respuesta === "Error"){
+        const notificar = document.getElementById('notificar-error')
+        notificar.innerHTML = "El cupon ya ha sido canjeado!!!"
+        form.reset()
+    }
 }else{
     alert('Formato incorrecto!!!')
     return;
 }
-form.reset()
+
 }
 }
 window.onload = () =>{

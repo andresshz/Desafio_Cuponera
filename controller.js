@@ -15,19 +15,28 @@ const conectar = () =>{
 }
 
 const Cupon = {
-    canjear:(req,res)=>{
-      conectar()
-      let lista = []
-      const {body} = req
-      const sql = `SELECT * FROM cupones WHERE codigo_cupon = ${body.codigo} AND dui = ${body.dui}`;
-      lista = con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("Cupon encontrado");
-      return true;
-      });
-      if(lista.length > 0){
-         return lista;
+    canjear:(req,res,next)=>{
+      
+      try{
+        conectar()
+        const {body} = req
+        con.query(`SELECT * FROM cupones WHERE id_estado_cupon = 1 AND dui = "${body.dui}"`, function (err, result, fields) {
+          if (err) throw err;
+          const sql = `UPDATE cupones SET id_estado_cupon = 2 WHERE codigo_cupon = "${body.codigo}" AND dui = "${body.dui}" AND id_estado_cupon = 1`;
+          con.query(sql, function (err, result) {
+           if (err) throw err;
+           const filas = result.affectedRows;
+           if(filas > 0){
+           console.log(filas + " cupon canjeadooo");
+           next()
+        }
+        })
+        }); 
+      }catch(e){
+        console.log(e.message)
+       
       }
+      ;
     }
 }
 
