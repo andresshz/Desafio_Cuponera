@@ -7,22 +7,22 @@ const con = mysql.createConnection({
   database: "cuponera_dwf"
 });
 
-const conectar = () =>{
-    con.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
-    });
-}
 
 const Cupon = {
     canjear:(req,res,next)=>{
-      
       try{
-        conectar()
+        con.connect(function(err) {
+          if (err) throw err;
+          console.log("Connected!");
+        });
         const {body} = req
         con.query(`SELECT * FROM cupones WHERE id_estado_cupon = 1 AND dui = "${body.dui}"`, function (err, result, fields) {
-          if (err) throw err;
-          const sql = `UPDATE cupones SET id_estado_cupon = 2 WHERE codigo_cupon = "${body.codigo}" AND dui = "${body.dui}" AND id_estado_cupon = 1`;
+          const select = result.affectedRows;
+          if (select == null) {
+            res.send("Error")
+            return;
+          }
+          const sql = `UPDATE cupones SET id_estado_cupon = 2 WHERE codigo_cupon = "${body.codigo}" AND dui = "${body.dui}"`;
           con.query(sql, function (err, result) {
            if (err) throw err;
            const filas = result.affectedRows;
@@ -34,7 +34,6 @@ const Cupon = {
         }); 
       }catch(e){
         console.log(e.message)
-       
       }
       ;
     }

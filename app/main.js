@@ -16,10 +16,10 @@ const validarDui = (dui) =>{
 
 const initTemplate = () =>{
 const template = `
-<div id="notificar-success" class="alert alert-success" role="alert">
+<div id="notificar-success" >
 
 </div>
-<div id="notificar-error" class="alert alert-danger" role="alert">
+<div id="notificar-error" >
 
 </div>
 <form id="formulario">
@@ -67,11 +67,13 @@ if(validarCodigo(codigo_cupon) == true && validarDui(dui) == true){
     const respuesta = await request.text()
     if(respuesta === "Exito"){
         const notificar = document.getElementById('notificar-success')
-        notificar.innerHTML = "Cupon canjeado correctamente!!!!"
+        notificar.innerHTML = `
+        <section class="alert alert-success" role="alert">Cupon canjeado correctamente!!!!</section>
+        `;
         form.reset()
     }else if(respuesta === "Error"){
         const notificar = document.getElementById('notificar-error')
-        notificar.innerHTML = "El cupon ya ha sido canjeado!!!"
+        notificar.innerHTML = `<section class="alert alert-danger" role="alert">El cupon ya ha sido canjeado!!!</section>`
         form.reset()
     }
 }else{
