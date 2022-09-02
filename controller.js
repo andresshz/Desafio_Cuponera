@@ -1,41 +1,52 @@
-const mysql = require('mysql')
 
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "cuponera_dwf"
-});
+const soapS = require('soap')
+
+const soap = require('strong-soap').soap;
+
 
 
 const Cupon = {
+  
     canjear:(req,res,next)=>{
-      try{
-        con.connect(function(err) {
-          if (err) throw err;
-          console.log("Connected!");
-        });
-        const {body} = req
-        con.query(`SELECT * FROM cupones WHERE id_estado_cupon = 1 AND dui = "${body.dui}"`, function (err, result, fields) {
-          const select = result.affectedRows;
-          if (select == null) {
-            res.send("Error")
-            return;
+      let url = "http://localhost:8080/WebServicesCuponera/services/CuponImpl?wsdl";
+      const {body} = req;
+      const codigo = "COD320";
+     
+      soapS.createClient(url, function(err, client){
+          if(err){
+            console.log(err)
+          }else{
+               client.busqueda(codigo, function(err, response){
+                  if(err){
+                    console.log(err)
+                  }else{
+                    console.log(`exitooooooo`);
+                    next();
+                  }
+               })
           }
-          const sql = `UPDATE cupones SET id_estado_cupon = 2 WHERE codigo_cupon = "${body.codigo}" AND dui = "${body.dui}"`;
-          con.query(sql, function (err, result) {
-           if (err) throw err;
-           const filas = result.affectedRows;
-           if(filas > 0){
-           console.log(filas + " cupon canjeadooo");
-           next()
+      })
+    }, 
+    
+    canjeo: (req,res,next)=>{
+      const {body} = req;
+      let url = "http://localhost:8080/WebServicesCuponera/services/CuponImpl?wsdl";
+      let requestArgs = {
+        codigo: `${body.cod}`,
+        dui: `${body.dui}`
+      };
+      var options = {};
+      soap.createClient(url, options, function(err, client) {
+        if(err){
+          return "Error";
         }
-        })
-        }); 
-      }catch(e){
-        console.log(e.message)
-      }
-      ;
+        let method = client['busqueda'];
+        method(requestArgs, function(err,result, envelope, soapHeader){
+          console.log('XML: \n' + envelope);
+          console.log('Result: \n' + JSON.stringify(result));
+          next();
+        });
+      });
     }
 }
 

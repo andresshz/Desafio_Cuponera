@@ -1,5 +1,6 @@
 const validarCodigo =(codigo)=>{
-    if(/^([0-9])*$/.test(codigo)){
+
+    if(/^[A-Z]+$/i.test(codigo)){
        return true;
     }else{
         return false;
@@ -25,8 +26,8 @@ const template = `
 <form id="formulario">
 <h3>Canjear cupon</h3>
 <div class="input-field col s6">
-    <input id="codigo" name="codigo" type="text" data-length="10" max="10" required>
-    <label for="codigo">Ingrese codigo del cupon:</label>
+    <input id="cod" name="cod" type="text" data-length="10" max="10" required>
+    <label for="cod">Ingrese codigo del cupon:</label>
 </div>
 <div class="input-field col s6">
     <input id="dui" name="dui" type="text" data-length="10" max="10" required>
@@ -34,8 +35,6 @@ const template = `
 </div>
 <button class="btn waves-effect waves-light" type="submit" name="action">Canjear Cupon</button>
 </form>
-
-
 `;
 
 const body = document.getElementsByTagName('body')[0]
@@ -49,8 +48,8 @@ e.preventDefault()
 
 //Validaciones
 let dui = document.getElementById('dui').value;
-let codigo_cupon = document.getElementById('codigo').value;
-if(validarCodigo(codigo_cupon) == true && validarDui(dui) == true){
+let codigo_cupon = document.getElementById('cod').value;
+if(validarDui(dui) == true){
     const data = new FormData(form)
     const dataForm = Object.fromEntries(data.entries())
     console.log(dataForm)
