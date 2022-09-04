@@ -2,34 +2,15 @@
 const soapS = require('soap')
 
 const soap = require('strong-soap').soap;
-
+ 
 
 
 const Cupon = {
-  
-    canjear:(req,res,next)=>{
-      let url = "http://localhost:8080/WebServicesCuponera/services/CuponImpl?wsdl";
-      const {body} = req;
-      const codigo = "COD320";
      
-      soapS.createClient(url, function(err, client){
-          if(err){
-            console.log(err)
-          }else{
-               client.busqueda(codigo, function(err, response){
-                  if(err){
-                    console.log(err)
-                  }else{
-                    console.log(`exitooooooo`);
-                    next();
-                  }
-               })
-          }
-      })
-    }, 
-    
     canjeo: (req,res,next)=>{
       const {body} = req;
+      
+      //Consumo el WebServices
       let url = "http://localhost:8080/WebServicesCuponera/services/CuponImpl?wsdl";
       let requestArgs = {
         codigo: `${body.cod}`,
@@ -37,14 +18,16 @@ const Cupon = {
       };
       var options = {};
       soap.createClient(url, options, function(err, client) {
-        if(err){
-          return "Error";
-        }
-        let method = client['busqueda'];
+        let method = client['canjear'];
         method(requestArgs, function(err,result, envelope, soapHeader){
           console.log('XML: \n' + envelope);
           console.log('Result: \n' + JSON.stringify(result));
-          next();
+          const prueba = result.return;
+          if(prueba === 'Error'){
+            res.send('Error');
+          }else{
+            next();
+          }
         });
       });
     }

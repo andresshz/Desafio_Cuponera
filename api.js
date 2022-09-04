@@ -1,5 +1,4 @@
 const express = require('express')
-const mysql = require('mysql')
 const controller = require('./controller')
 const port = 3000 | process.env.PORT;
 const app = express();
@@ -7,6 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static('resources'));
 app.use(express.static('app'));
+app.use(express.static('img'));
 
 app.post('/canjeo',controller.canjeo,(req,res)=>{
     res.status(200).send("Exito")
@@ -15,7 +15,8 @@ app.post('/canjeo',controller.canjeo,(req,res)=>{
 
 app.get('/user',(req,res)=>{
     res.send('hola mundo')
-    })
+})
+
 app.get('/view',(req,res)=>{
     res.sendFile(`${__dirname}/cupon.html`)
 })

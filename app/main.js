@@ -64,6 +64,7 @@ if(validarDui(dui) == true){
     })
     
     const respuesta = await request.text()
+    console.log(respuesta);
     if(respuesta === "Exito"){
         const notificar = document.getElementById('notificar-success')
         notificar.innerHTML = `
@@ -72,7 +73,7 @@ if(validarDui(dui) == true){
         form.reset()
     }else if(respuesta === "Error"){
         const notificar = document.getElementById('notificar-error')
-        notificar.innerHTML = `<section class="alert alert-danger" role="alert">El cupon ya ha sido canjeado!!!</section>`
+        notificar.innerHTML = `<section class="alert alert-danger" role="alert">El cupon ya fue canjeado y/o no existe el cupon!!</section>`
         form.reset()
     }
 }else{
